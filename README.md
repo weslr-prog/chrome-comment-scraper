@@ -59,7 +59,38 @@ That is a Chrome security restriction. Chrome does not allow extensions to injec
 Recommended alternatives:
 
 - Use a separate local script (Node/Playwright) outside the extension context
-- Use manual export/copy workflows and run the summarizer on pasted data
+- Use manual copy workflows and run the summarizer on collected text/data
+
+## Local scraper workflow (recommended)
+
+This repo now includes a local script path that runs outside extension context.
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Scrape reviews from a Chrome Web Store extension URL:
+
+```bash
+npm run scrape -- --url "https://chromewebstore.google.com/detail/<extension-id>" --out output/reviews.json --scrolls 12 --waitMs 1400
+```
+
+3. Generate a standalone summary JSON:
+
+```bash
+npm run summarize -- --in output/reviews.json --out output/summary.json
+```
+
+Notes:
+
+- On macOS, the script uses Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`.
+- If your Chrome binary is elsewhere, set `CHROME_PATH` before running:
+
+```bash
+CHROME_PATH="/path/to/Google Chrome" npm run scrape -- --url "https://chromewebstore.google.com/detail/<extension-id>"
+```
 
 ## Use it
 

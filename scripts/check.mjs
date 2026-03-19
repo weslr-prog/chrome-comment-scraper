@@ -10,7 +10,11 @@ const requiredFiles = [
   'popup.css',
   'popup.js',
   'README.md',
-  '.github/copilot-instructions.md'
+  '.github/copilot-instructions.md',
+  'scripts/review-summary.mjs',
+  'scripts/scrape-reviews.mjs',
+  'scripts/summarize-reviews.mjs',
+  'CONTRIBUTING.md'
 ];
 
 for (const relativePath of requiredFiles) {

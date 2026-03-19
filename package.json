@@ -4,6 +4,11 @@
   "private": true,
   "description": "Lightweight Chrome extension for scraping visible Chrome Web Store reviews and summarizing likes and dislikes.",
   "scripts": {
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "scrape": "node scripts/scrape-reviews.mjs",
+    "summarize": "node scripts/summarize-reviews.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.52.0"
   }
 }
