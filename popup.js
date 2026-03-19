@@ -70,7 +70,13 @@ async function analyzeCurrentPage() {
     metricsPanel.hidden = true;
     summaryPanel.hidden = true;
     quotesPanel.hidden = true;
-    setStatus('error', `${error.message || 'Failed to analyze the current page.'} If this is your first run, reload the Chrome Web Store tab once and try again.`);
+    const baseMessage = error.message || 'Failed to analyze the current page.';
+    const isBlockedByChrome = /cannot be scripted|direct in-page scraping is not allowed/i.test(baseMessage);
+    const guidance = isBlockedByChrome
+      ? 'Use a local script workflow (outside extension context) to collect review text, then analyze it here.'
+      : 'If this is your first run, reload the page once and try again.';
+
+    setStatus('error', `${baseMessage} ${guidance}`);
   } finally {
     toggleBusy(false);
   }
