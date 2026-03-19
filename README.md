@@ -34,6 +34,22 @@ Chrome Web Store pages are dynamic and subject to layout changes. This tool inte
 4. Read the like/dislike themes and representative quotes
 5. Click **Export JSON** to save full collected data
 
+## Troubleshooting
+
+If the scraper is not returning reviews:
+
+1. Go to `chrome://extensions`
+2. Click **Reload** on Chrome Comment Scraper
+3. Refresh the Chrome Web Store tab you want to analyze
+4. Scroll down until review cards are visible on screen
+5. Open the popup and click **Analyze Current Page** again
+
+Additional checks:
+
+- Confirm you are on a Chrome Web Store extension detail page (not another site)
+- Re-open the popup after scrolling, so `activeTab` permission is fresh
+- If a page has no loaded review cards yet, keep scrolling and retry
+
 ## Use it
 
 1. Open a Chrome Web Store extension page
