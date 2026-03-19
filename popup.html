@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chrome Comment Scraper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <p class="eyebrow">Chrome Web Store Reviews</p>
+        <h1>Comment Scraper</h1>
+        <p class="subtitle">Collect visible reviews and surface the fastest read on what users like and dislike.</p>
+      </header>
+
+      <section class="actions">
+        <button id="analyzeButton" class="primary">Analyze Current Page</button>
+        <button id="exportButton" class="secondary" disabled>Export JSON</button>
+      </section>
+
+      <section class="statusPanel">
+        <div class="statusRow">
+          <span class="statusLabel">Status</span>
+          <span id="statusBadge" class="statusBadge idle">Ready</span>
+        </div>
+        <p id="statusMessage" class="statusMessage">Open a Chrome Web Store extension page, scroll until reviews are visible, then analyze.</p>
+      </section>
+
+      <section class="metrics" id="metricsPanel" hidden>
+        <article class="metricCard">
+          <span class="metricLabel">Reviews</span>
+          <strong id="reviewCount">0</strong>
+        </article>
+        <article class="metricCard">
+          <span class="metricLabel">Average Rating</span>
+          <strong id="averageRating">0.0</strong>
+        </article>
+        <article class="metricCard">
+          <span class="metricLabel">Positive</span>
+          <strong id="positiveCount">0</strong>
+        </article>
+        <article class="metricCard">
+          <span class="metricLabel">Negative</span>
+          <strong id="negativeCount">0</strong>
+        </article>
+      </section>
+
+      <section class="summaryGrid" id="summaryPanel" hidden>
+        <article class="panel likes">
+          <div class="panelHeader">
+            <h2>What People Like</h2>
+            <span class="panelHint">Top positive themes</span>
+          </div>
+          <ul id="likesList" class="themeList"></ul>
+        </article>
+
+        <article class="panel dislikes">
+          <div class="panelHeader">
+            <h2>What People Don&apos;t Like</h2>
+            <span class="panelHint">Top negative themes</span>
+          </div>
+          <ul id="dislikesList" class="themeList"></ul>
+        </article>
+      </section>
+
+      <section class="panel quotes" id="quotesPanel" hidden>
+        <div class="panelHeader">
+          <h2>Representative Quotes</h2>
+          <span class="panelHint">Useful for quick pattern checks</span>
+        </div>
+        <div class="quoteColumns">
+          <div>
+            <h3>Positive</h3>
+            <ul id="positiveQuotes" class="quoteList"></ul>
+          </div>
+          <div>
+            <h3>Negative</h3>
+            <ul id="negativeQuotes" class="quoteList"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

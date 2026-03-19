@@ -1,0 +1,9 @@
+{
+  "name": "chrome-comment-scraper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lightweight Chrome extension for scraping visible Chrome Web Store reviews and summarizing likes and dislikes.",
+  "scripts": {
+    "check": "node scripts/check.mjs"
+  }
+}

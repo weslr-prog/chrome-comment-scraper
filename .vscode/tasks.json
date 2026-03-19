@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Validate Chrome Extension",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"check"
+			],
+			"isBackground": false,
+			"group": "build"
+		}
+	]
+}

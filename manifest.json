@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Chrome Comment Scraper",
+  "version": "0.1.0",
+  "description": "Scrape visible Chrome Web Store reviews and summarize what users like and dislike.",
+  "permissions": ["activeTab", "downloads"],
+  "host_permissions": [
+    "https://chromewebstore.google.com/*",
+    "https://chrome.google.com/webstore/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Chrome Comment Scraper",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chromewebstore.google.com/*",
+        "https://chrome.google.com/webstore/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
