@@ -85,10 +85,20 @@ async function requestReviewsFromTab(tabId) {
   } catch {
   }
 
-  const executionResults = await chrome.scripting.executeScript({
-    target: { tabId },
-    func: runScrapeOnPage
-  });
+  let executionResults;
+  try {
+    executionResults = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: runScrapeOnPage
+    });
+  } catch (error) {
+    const message = String(error?.message || '');
+    if (/extensions gallery cannot be scripted/i.test(message)) {
+      throw new Error('Chrome blocks all extensions from scripting Chrome Web Store pages. Direct in-page scraping is not allowed on this domain.');
+    }
+
+    throw error;
+  }
 
   return executionResults?.[0]?.result || { reviews: [] };
 }

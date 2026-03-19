@@ -50,6 +50,17 @@ Additional checks:
 - Re-open the popup after scrolling, so `activeTab` permission is fresh
 - If a page has no loaded review cards yet, keep scrolling and retry
 
+If you see this specific error:
+
+- `The extensions gallery cannot be scripted`
+
+That is a Chrome security restriction. Chrome does not allow extensions to inject or run scripts on Chrome Web Store pages, so direct scraping from an extension popup is blocked by design.
+
+Recommended alternatives:
+
+- Use a separate local script (Node/Playwright) outside the extension context
+- Use manual export/copy workflows and run the summarizer on pasted data
+
 ## Use it
 
 1. Open a Chrome Web Store extension page
