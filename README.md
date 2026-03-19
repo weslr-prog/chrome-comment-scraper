@@ -2,6 +2,11 @@
 
 Chrome Comment Scraper is a lightweight Chrome extension that reads the visible reviews on a Chrome Web Store extension page and turns them into a fast summary of what users like and dislike.
 
+## Repository
+
+- GitHub: https://github.com/weslr-prog/chrome-comment-scraper
+- Branch: `main`
+
 ## What it does
 
 - Scrapes the reviews currently visible in the page DOM
@@ -17,9 +22,17 @@ Chrome Web Store pages are dynamic and subject to layout changes. This tool inte
 ## Load the extension
 
 1. Open Chrome and go to `chrome://extensions`
-2. Enable Developer mode
-3. Click Load unpacked
+2. Enable **Developer mode**
+3. Click **Load unpacked**
 4. Select this project folder
+
+## Quick workflow
+
+1. Navigate to an extension detail page on Chrome Web Store
+2. Scroll until reviews are visible
+3. Open the extension popup and click **Analyze Current Page**
+4. Read the like/dislike themes and representative quotes
+5. Click **Export JSON** to save full collected data
 
 ## Use it
 
@@ -28,6 +41,22 @@ Chrome Web Store pages are dynamic and subject to layout changes. This tool inte
 3. Open the extension popup
 4. Click Analyze Current Page
 5. Review the summary or click Export JSON
+
+## Data shape
+
+Each scraped review includes:
+
+- `rating`
+- `title`
+- `body`
+- `author`
+- `date`
+
+Exported JSON contains:
+
+- page metadata (`title`, `url`, `collectedAt`)
+- computed summary (counts, average rating, top themes, quotes)
+- raw scraped reviews
 
 ## Validate the project
 
@@ -41,3 +70,4 @@ npm run check
 
 - Review extraction depends on the current Chrome Web Store DOM and may need updates if Google changes the page structure
 - The `icons` folder is not populated yet. Chrome can still load the extension unpacked without custom icons
+- This project intentionally has no framework build chain to keep it fast and lightweight
