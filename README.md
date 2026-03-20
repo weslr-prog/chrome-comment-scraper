@@ -91,10 +91,24 @@ Use one command to scrape and summarize in one run:
 npm run analyze -- --url "https://chromewebstore.google.com/detail/<extension-id>"
 ```
 
+If your URL includes query parameters (`?utm_source=...`), keep it quoted in the shell so `zsh` does not treat `?` as a wildcard.
+
+Default analyzer behavior is reliability-first:
+
+- Normalizes URLs to `/detail/<name>/<id>/reviews`
+- Uses headed mode by default (`--headless false`)
+- Retries with an alternate run profile if no reviews are found
+
 For your provided test URL, use:
 
 ```bash
 npm run analyze:ultimate-car
+```
+
+Or use the exact full URL preset:
+
+```bash
+npm run analyze:ultimate-car-full
 ```
 
 ## Simple UI (paste URL + run)

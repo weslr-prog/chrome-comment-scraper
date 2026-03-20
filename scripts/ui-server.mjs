@@ -61,7 +61,13 @@ async function handleRun(req, res) {
       '--reviews',
       reviewsPath,
       '--summary',
-      summaryPath
+      summaryPath,
+      '--headless',
+      'false',
+      '--scrolls',
+      '18',
+      '--waitMs',
+      '1700'
     ]);
 
     const reviewsPayload = JSON.parse(fs.readFileSync(reviewsPath, 'utf8'));

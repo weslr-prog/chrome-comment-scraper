@@ -7,17 +7,18 @@ if (!args.url) {
   printUsageAndExit('Missing required --url argument.');
 }
 
+const normalizedUrl = normalizeChromeWebStoreUrl(args.url);
 const outDir = args.outDir || 'output';
 const outputReviews = args.reviews || path.join(outDir, 'reviews.json');
 const outputSummary = args.summary || path.join(outDir, 'summary.json');
 const scrolls = args.scrolls || '12';
 const waitMs = args.waitMs || '1400';
-const headless = args.headless || 'true';
+const headless = args.headless || 'false';
 
 runCommand('node', [
   'scripts/scrape-reviews.mjs',
   '--url',
-  args.url,
+  normalizedUrl,
   '--out',
   outputReviews,
   '--scrolls',
@@ -81,4 +82,24 @@ function printUsageAndExit(message) {
 
   console.log(`\nUsage:\n  node scripts/analyze-reviews.mjs --url <chrome_web_store_url> [--outDir output] [--reviews output/reviews.json] [--summary output/summary.json] [--scrolls 12] [--waitMs 1400] [--headless true]\n`);
   process.exit(1);
+}
+
+function normalizeChromeWebStoreUrl(rawUrl) {
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    printUsageAndExit('Invalid URL format.');
+  }
+
+  if (!/chromewebstore\.google\.com$/i.test(parsed.hostname)) {
+    printUsageAndExit('URL must be from chromewebstore.google.com');
+  }
+
+  const detailMatch = parsed.pathname.match(/^\/detail\/([^/]+)\/([^/]+)/i);
+  if (!detailMatch) {
+    printUsageAndExit('URL must match /detail/<name>/<id>');
+  }
+
+  return `https://chromewebstore.google.com/detail/${detailMatch[1]}/${detailMatch[2]}/reviews`;
 }

@@ -11,6 +11,91 @@
 			],
 			"isBackground": false,
 			"group": "build"
+		},
+		{
+			"label": "Analyze Ultimate Car Reviews",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"analyze",
+				"--",
+				"--url",
+				"https://chromewebstore.google.com/detail/ultimate-car-driving-game/aomkpefnllinimbhddlfhelelngakbbn/reviews?utm_source=ext_app_menu"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Validate Chrome Extension",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"check"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Analyze Ultimate Car Full URL",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"analyze:ultimate-car-full"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Validate Chrome Extension",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"check"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Git Status Check",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"status",
+				"--short",
+				"--branch"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Git Commit and Push Fixes",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"add",
+				".vscode/tasks.json",
+				"README.md",
+				"output/reviews.json",
+				"output/summary.json",
+				"package.json",
+				"scripts/analyze-reviews.mjs",
+				"scripts/scrape-reviews.mjs",
+				"scripts/ui-server.mjs",
+				"&&",
+				"git",
+				"commit",
+				"-m",
+				"Fix URL handling and harden scraper runtime",
+				"&&",
+				"git",
+				"push"
+			],
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }

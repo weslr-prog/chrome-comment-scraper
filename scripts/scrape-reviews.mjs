@@ -9,59 +9,54 @@ if (!args.url) {
   printUsageAndExit('Missing required --url argument.');
 }
 
+const targetUrl = normalizeChromeWebStoreUrl(args.url);
 const outputFile = args.out || path.join('output', `reviews-${Date.now()}.json`);
 const maxScrolls = Number(args.scrolls || 10);
 const waitMs = Number(args.waitMs || 1200);
 const headless = args.headless !== 'false';
-const chromePath = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const chromePath = resolveChromePath();
 
-if (!fs.existsSync(chromePath)) {
-  printUsageAndExit(`Chrome executable not found at ${chromePath}. Set CHROME_PATH to your Chrome binary.`);
-}
+const attempts = headless
+  ? [{ headless: true, scrolls: maxScrolls }, { headless: false, scrolls: maxScrolls + 8 }]
+  : [{ headless: false, scrolls: maxScrolls }];
 
-const browser = await chromium.launch({
-  headless,
-  executablePath: chromePath
-});
+let finalResult = null;
+for (const attempt of attempts) {
+  finalResult = await collectReviews({
+    url: targetUrl,
+    chromePath,
+    headless: attempt.headless,
+    maxScrolls: attempt.scrolls,
+    waitMs
+  });
 
-try {
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  console.log(`Opening ${args.url}`);
-  await page.goto(args.url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForTimeout(2000);
-
-  await openReviewsSection(page);
-
-  for (let index = 0; index < maxScrolls; index += 1) {
-    await page.mouse.wheel(0, 2400);
-    await page.waitForTimeout(waitMs);
+  if (finalResult.reviews.length > 0) {
+    break;
   }
-
-  const result = await page.evaluate(scrapeReviewsInPage);
-  const summary = summarizeReviews(result.reviews);
-
-  const payload = {
-    page: {
-      title: result.pageTitle,
-      url: result.url,
-      collectedAt: new Date().toISOString(),
-      maxScrolls,
-      waitMs
-    },
-    summary,
-    reviews: result.reviews
-  };
-
-  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
-  fs.writeFileSync(outputFile, JSON.stringify(payload, null, 2), 'utf8');
-
-  console.log(`Collected ${result.reviews.length} reviews.`);
-  console.log(`Saved to ${outputFile}`);
-} finally {
-  await browser.close();
 }
+
+if (!finalResult || finalResult.reviews.length === 0) {
+  throw new Error('No reviews could be collected. Try increasing --scrolls (for example 20) and --waitMs (for example 1800), or run again later.');
+}
+
+const summary = summarizeReviews(finalResult.reviews);
+const payload = {
+  page: {
+    title: finalResult.pageTitle,
+    url: finalResult.url,
+    collectedAt: new Date().toISOString(),
+    maxScrolls,
+    waitMs
+  },
+  summary,
+  reviews: finalResult.reviews
+};
+
+fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+fs.writeFileSync(outputFile, JSON.stringify(payload, null, 2), 'utf8');
+
+console.log(`Collected ${finalResult.reviews.length} reviews.`);
+console.log(`Saved to ${outputFile}`);
 
 function parseArgs(argv) {
   const parsed = {};
@@ -92,6 +87,71 @@ function printUsageAndExit(message) {
 
   console.log(`\nUsage:\n  node scripts/scrape-reviews.mjs --url <chrome_web_store_url> [--out output/reviews.json] [--scrolls 10] [--waitMs 1200] [--headless false]\n\nEnv:\n  CHROME_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\n`);
   process.exit(1);
+}
+
+function normalizeChromeWebStoreUrl(rawUrl) {
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    printUsageAndExit('Invalid URL format.');
+  }
+
+  if (parsed.hostname !== 'chromewebstore.google.com') {
+    printUsageAndExit('URL must be from chromewebstore.google.com');
+  }
+
+  const detailMatch = parsed.pathname.match(/^\/detail\/([^/]+)\/([^/]+)/i);
+  if (!detailMatch) {
+    printUsageAndExit('URL must match /detail/<name>/<id>');
+  }
+
+  const normalized = `https://chromewebstore.google.com/detail/${detailMatch[1]}/${detailMatch[2]}/reviews`;
+  return normalized;
+}
+
+function resolveChromePath() {
+  const candidates = [
+    process.env.CHROME_PATH,
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
+    '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'
+  ].filter(Boolean);
+
+  const found = candidates.find((candidate) => fs.existsSync(candidate));
+  if (!found) {
+    printUsageAndExit(`Chrome executable not found. Set CHROME_PATH to your browser binary path.`);
+  }
+
+  return found;
+}
+
+async function collectReviews({ url, chromePath, headless, maxScrolls, waitMs }) {
+  const browser = await chromium.launch({
+    headless,
+    executablePath: chromePath
+  });
+
+  try {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    console.log(`Opening ${url} (headless=${headless})`);
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.waitForTimeout(2600);
+
+    await openReviewsSection(page);
+
+    for (let index = 0; index < maxScrolls; index += 1) {
+      await page.mouse.wheel(0, 2800);
+      await page.waitForTimeout(waitMs);
+    }
+
+    return await page.evaluate(scrapeReviewsInPage);
+  } finally {
+    await browser.close();
+  }
 }
 
 async function openReviewsSection(page) {
