@@ -83,6 +83,20 @@ npm run scrape -- --url "https://chromewebstore.google.com/detail/<extension-id>
 npm run summarize -- --in output/reviews.json --out output/summary.json
 ```
 
+### Simplest execution
+
+Use one command to scrape and summarize in one run:
+
+```bash
+npm run analyze -- --url "https://chromewebstore.google.com/detail/<extension-id>"
+```
+
+For your provided test URL, use:
+
+```bash
+npm run analyze:ultimate-car
+```
+
 Notes:
 
 - On macOS, the script uses Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`.

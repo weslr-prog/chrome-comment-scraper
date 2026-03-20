@@ -1,0 +1,35 @@
+{
+  "totalReviews": 11,
+  "averageRating": 0,
+  "positiveCount": 0,
+  "negativeCount": 11,
+  "positiveThemes": [],
+  "negativeThemes": [
+    {
+      "label": "Bugs and crashes",
+      "count": 2
+    },
+    {
+      "label": "Slow or heavy",
+      "count": 1
+    }
+  ],
+  "positiveQuotes": [],
+  "negativeQuotes": [
+    {
+      "text": "Of course i put 0 stars on it. Bad driving graphics,ai cars are dumb,no highways im trying to reach 240 kmh please fix those and udapte a highway to give 5 stars",
+      "author": "amankom",
+      "rating": 0
+    },
+    {
+      "text": "Great game! I put it on drift mode, and now, I can crash the car! I am enjoin this game for over 2 hours so far! awesome game!!!",
+      "author": "Elijah",
+      "rating": 0
+    },
+    {
+      "text": "I like all games which are their in this.\nIt is very good & all the guys can like this .\nplease like &subscribe.\nTHANK YOU",
+      "author": "Arjun Tyagi",
+      "rating": 0
+    }
+  ]
+}

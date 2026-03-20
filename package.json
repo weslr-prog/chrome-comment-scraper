@@ -6,7 +6,9 @@
   "scripts": {
     "check": "node scripts/check.mjs",
     "scrape": "node scripts/scrape-reviews.mjs",
-    "summarize": "node scripts/summarize-reviews.mjs"
+    "summarize": "node scripts/summarize-reviews.mjs",
+    "analyze": "node scripts/analyze-reviews.mjs",
+    "analyze:ultimate-car": "node scripts/analyze-reviews.mjs --url https://chromewebstore.google.com/detail/ultimate-car-driving-game/aomkpefnllinimbhddlfhelelngakbbn/reviews"
   },
   "dependencies": {
     "playwright-core": "^1.52.0"
