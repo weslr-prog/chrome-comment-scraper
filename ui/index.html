@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chrome Comment Scraper UI</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #111;
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 24px auto;
+        padding: 16px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+      }
+      h1 {
+        margin-top: 0;
+        font-size: 22px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #bbb;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      button {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border: 1px solid #222;
+        border-radius: 6px;
+        background: #222;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .status {
+        margin-top: 12px;
+        font-size: 14px;
+      }
+      .results {
+        margin-top: 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .metric {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 10px;
+        background: #fafafa;
+      }
+      .metric strong {
+        display: block;
+        font-size: 20px;
+        margin-top: 4px;
+      }
+      h2 {
+        font-size: 16px;
+        margin-top: 18px;
+        margin-bottom: 8px;
+      }
+      pre {
+        background: #111;
+        color: #f0f0f0;
+        border-radius: 6px;
+        padding: 12px;
+        overflow: auto;
+        max-height: 340px;
+        font-size: 12px;
+      }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Chrome Comment Scraper</h1>
+        <label for="urlInput">Chrome Web Store URL</label>
+        <input id="urlInput" type="url" placeholder="https://chromewebstore.google.com/detail/..." />
+        <button id="runButton">Run</button>
+        <div id="status" class="status">Ready</div>
+
+        <div class="results" id="results" hidden>
+          <div class="grid">
+            <div class="metric">
+              Reviews
+              <strong id="mReviews">0</strong>
+            </div>
+            <div class="metric">
+              Avg Rating
+              <strong id="mAvg">0.0</strong>
+            </div>
+            <div class="metric">
+              Positive
+              <strong id="mPos">0</strong>
+            </div>
+            <div class="metric">
+              Negative
+              <strong id="mNeg">0</strong>
+            </div>
+          </div>
+
+          <h2>Summary JSON</h2>
+          <pre id="summaryJson"></pre>
+
+          <h2>Reviews JSON</h2>
+          <pre id="reviewsJson"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const runButton = document.getElementById('runButton');
+      const urlInput = document.getElementById('urlInput');
+      const statusNode = document.getElementById('status');
+      const resultsNode = document.getElementById('results');
+      const summaryJson = document.getElementById('summaryJson');
+      const reviewsJson = document.getElementById('reviewsJson');
+
+      const mReviews = document.getElementById('mReviews');
+      const mAvg = document.getElementById('mAvg');
+      const mPos = document.getElementById('mPos');
+      const mNeg = document.getElementById('mNeg');
+
+      runButton.addEventListener('click', async () => {
+        const url = urlInput.value.trim();
+        if (!url) {
+          statusNode.textContent = 'Please paste a URL first.';
+          return;
+        }
+
+        runButton.disabled = true;
+        resultsNode.hidden = true;
+        statusNode.textContent = 'Running... this may take a moment.';
+
+        try {
+          const response = await fetch('/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || 'Run failed');
+          }
+
+          const summary = data.summary;
+          mReviews.textContent = String(summary.totalReviews);
+          mAvg.textContent = Number(summary.averageRating || 0).toFixed(1);
+          mPos.textContent = String(summary.positiveCount || 0);
+          mNeg.textContent = String(summary.negativeCount || 0);
+
+          summaryJson.textContent = JSON.stringify(summary, null, 2);
+          reviewsJson.textContent = JSON.stringify(data.reviews, null, 2);
+          resultsNode.hidden = false;
+          statusNode.textContent = 'Done.';
+        } catch (error) {
+          statusNode.textContent = error.message || 'Run failed';
+        } finally {
+          runButton.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

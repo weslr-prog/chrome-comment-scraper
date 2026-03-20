@@ -15,6 +15,8 @@ const requiredFiles = [
   'scripts/scrape-reviews.mjs',
   'scripts/summarize-reviews.mjs',
   'scripts/analyze-reviews.mjs',
+  'scripts/ui-server.mjs',
+  'ui/index.html',
   'CONTRIBUTING.md'
 ];
 

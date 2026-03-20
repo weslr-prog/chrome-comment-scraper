@@ -8,7 +8,8 @@
     "scrape": "node scripts/scrape-reviews.mjs",
     "summarize": "node scripts/summarize-reviews.mjs",
     "analyze": "node scripts/analyze-reviews.mjs",
-    "analyze:ultimate-car": "node scripts/analyze-reviews.mjs --url https://chromewebstore.google.com/detail/ultimate-car-driving-game/aomkpefnllinimbhddlfhelelngakbbn/reviews"
+    "analyze:ultimate-car": "node scripts/analyze-reviews.mjs --url https://chromewebstore.google.com/detail/ultimate-car-driving-game/aomkpefnllinimbhddlfhelelngakbbn/reviews",
+    "ui": "node scripts/ui-server.mjs"
   },
   "dependencies": {
     "playwright-core": "^1.52.0"

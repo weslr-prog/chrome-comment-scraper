@@ -97,6 +97,19 @@ For your provided test URL, use:
 npm run analyze:ultimate-car
 ```
 
+## Simple UI (paste URL + run)
+
+1. Start the UI server:
+
+```bash
+npm run ui
+```
+
+2. Open http://localhost:8787
+3. Paste a Chrome Web Store detail URL
+4. Click **Run**
+5. View results directly on the page (metrics + summary JSON + reviews JSON)
+
 Notes:
 
 - On macOS, the script uses Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`.
